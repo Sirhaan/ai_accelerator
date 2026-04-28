@@ -1,11 +1,6 @@
 module quant
 import pkg::*;
-#(
-    parameter IN_WIDTH = `IN_WIDTH,
-    parameter SCALE_WIDTH = `SCALE_WIDTH,
-    parameter SCALE_FRAC = `SCALE_FRAC,
-    parameter OUT_WIDTH = `ACT_WIDTH
-)(
+(
         input  logic                           clk,
     input  logic                           rst,
     input  logic                           enable,
