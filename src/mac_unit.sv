@@ -32,7 +32,7 @@ end
 // 1 cycle delay in every pe hop
 always_comb begin
     wgt_out = wgt_reg; // pass weight to south neighbour
-    act_out =  wgt_reg; // perform multiplication 
+    act_out =  act_reg; // perform multiplication 
 end
 // second stage: MAC operation (8x8 = 16bit result)
 logic signed [ACT_WIDTH + WGT_WIDTH - 1:0] mult_result;
