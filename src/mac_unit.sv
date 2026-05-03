@@ -4,6 +4,7 @@ import pkg::*;
     input logic clk, rst,
       input  logic                          clear_acc,   // Reset accumulator to 0
   input  logic                          enable,      // Pipeline enable (stall when low)
+  input logic wgt_load,
     input logic [ACT_WIDTH-1:0] act_in, // east input (activation from left neighbour)
     input logic [WGT_WIDTH-1:0] wgt_in, // north input (weight from upper neighbour)
     output logic [WGT_WIDTH-1:0] wgt_out, // south output (weight to lower neighbour)
@@ -16,22 +17,33 @@ import pkg::*;
 // first stage 
 logic signed [ACT_WIDTH-1:0] act_reg;
 logic signed [WGT_WIDTH-1:0] wgt_reg;
+logic signed [WGT_WIDTH-1:0] wgt_pipe_reg;
+always_ff @(posedge clk or posedge rst) begin
+    if(rst)begin 
+        wgt_reg <= '0;
+        wgt_pipe_reg <= '0;
+    end else begin 
+        if (wgt_load) begin
+        wgt_reg <= wgt_in; // load new weight
+    end  
+    wgt_pipe_reg <= wgt_in; // pipeline weight to south neighbour
+    end
+end
+
 always_ff @(posedge clk or posedge rst) begin
     if (rst) begin
         act_reg <= '0;
-        wgt_reg <= '0;
     end else if (clear_acc) begin
         act_reg <= '0;
-        wgt_reg <= '0;
+
     end
     else if (enable) begin
         act_reg <= act_in;
-        wgt_reg <= wgt_in;
     end
 end
 // 1 cycle delay in every pe hop
 always_comb begin
-    wgt_out = wgt_reg; // pass weight to south neighbour
+    wgt_out = wgt_pipe_reg; // pass weight to south neighbour
     act_out =  act_reg; // perform multiplication 
 end
 // second stage: MAC operation (8x8 = 16bit result)

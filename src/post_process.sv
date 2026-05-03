@@ -13,23 +13,9 @@ input logic [1:0]                       act_type,
     output logic                         any_saturated
 
 );
-localparam logic [1:0] ACT_LINEAR = 2'd0;
-localparam logic [1:0] ACT_RELU   = 2'd1;
-localparam logic [1:0] ACT_GELU   = 2'd2;
-
-localparam signed [ACT_WIDTH-1:0] Q_MAX =  127;
-localparam signed [ACT_WIDTH-1:0] Q_MIN = -127;
-localparam PROD_WIDTH = ACC_WIDTH + SCALE_WIDTH; // 48 bits
-localparam BIASED_WIDTH = ACC_WIDTH + SCALE_WIDTH + 1; // 49 bits (OVERFLOW_BIT for saturation detection)
-localparam SHIFT_WIDTH = BIASED_WIDTH - SCALE_FRAC; // 34 bits for shift operations
-localparam LUT_ENTRIES = 1024;
-localparam LUT_ADDR    = 10;
-localparam signed [BIASED_WIDTH-1:0] FP_WIN = (4 <<< SCALE_FRAC);
 // Bit-slice positions in offset value (after +FP_WIN)
 // offset = stage2_biased + FP_WIN → [0, 2×FP_WIN] = [0, 2^18]
 // Take bits [17:8] for 10-bit index with 1/128 resolution
-localparam LUT_MSB = SCALE_FRAC + 2;  // 17
-localparam LUT_LSB = SCALE_FRAC - 7;  // 8
 logic signed [ACT_WIDTH-1:0] gelu_lut [LUT_ENTRIES];
 initial $readmemh("gelu_lut.hex", gelu_lut);
 //stage 1 multiply acc and scale 
