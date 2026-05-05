@@ -158,7 +158,7 @@ always_ff @(posedge clk or posedge rst) begin
     end
 end
 
-always_ff @(posedge clk or posedge rst) begin
+always_ff @(posedge clk or posedge rst) begin :tile_cnt
     if (rst) begin
         cnt_ic <= '0; cnt_oc <= '0; cnt_spatial <= '0;
     end else begin
