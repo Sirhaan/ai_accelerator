@@ -1,0 +1,12 @@
++incdir+./src
+src/pkg.sv
+src/axi_slave.sv
+src/axi_master.sv
+src/quant.sv
+src/sram_controller.sv
+src/mac_unit.sv
+src/systolic_array.sv
+src/post_process.sv
+src/fsm_controller.sv
+src/top_int.sv
+src/tb/tb_top_int.sv
